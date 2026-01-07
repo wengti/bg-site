@@ -167,6 +167,10 @@ a:active{
     font-weight: bold;
 }
 
+.logout-btn:hover{
+    cursor: pointer;
+}
+
 #hamburger:hover{
     color: var(--bg-element);
     cursor: pointer;
@@ -347,17 +351,26 @@ main {
 
 }
 
-.genre {
+.genre,
+.quantity {
     position: absolute;
-    top: 10px;
-    left: 0;
     background-color: var(--bg-element);
     color: black;
     padding: 0 .5em;
     border: var(--element-border);
+    left: 0;
+    box-shadow: 2px 2px gray;
     border-top-right-radius: var(--element-border-radius);
     border-bottom-right-radius: var(--element-border-radius);
-    box-shadow: 2px 2px gray;
+}
+
+.genre{
+    top: 10px;
+    
+}
+
+.quantity{
+    top: 40px;
 }
 
 .na-card{

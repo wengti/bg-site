@@ -10,26 +10,28 @@ export async function getItems(req, res) {
         if(!search){
             ret = await db.query(`
                 SELECT * FROM items
+                    WHERE quantity > 0
+                    ORDER BY title
                 `)
         }
         else{
 
             ret = await db.query(`
                 SELECT * FROM items
-                    WHERE unaccent(title) ILIKE '%${search}%' OR
-                          unaccent(designer) ILIKE '%${search}%'
+                    WHERE (unaccent(title) ILIKE '%${search}%' OR
+                          unaccent(designer) ILIKE '%${search}%') AND
+                          quantity > 0
+                    ORDER BY title
                 `)
         }
 
-        
-        res.json(ret.rows)
+        await db.close()
+        return res.json(ret.rows)
 
     }
     catch(err){
-        res.status(500).json(err)
-    }
-    finally{
         await db.close()
+        return res.status(500).json(err)
     }
 }
 
@@ -41,12 +43,12 @@ export async function getGenre(req, res){
             SELECT DISTINCT genre FROM items
             `)
         
-        res.json(ret.rows)
+        await db.close()
+        return res.json(ret.rows)
     }
     catch(err){
-        res.status(500).json(err)
-    }
-    finally{
         await db.close()
+        return res.status(500).json(err)
     }
+
 }

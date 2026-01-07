@@ -9,13 +9,14 @@ const ret = await db.query(`
 
 await db.close()
 
-const result = ret.rows.map( ({id, title, designer, price, genre, img}) => {
+const result = ret.rows.map( ({id, title, designer, price, genre, quantity, img}) => {
     return {
         id,
         title,
         designer,
         price,
         genre,
+        quantity,
         img: img.slice(0, 50)
     }
 })

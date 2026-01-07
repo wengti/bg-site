@@ -58,3 +58,25 @@ export async function handleLogin(event){
     window.location.href='/'
 }
 
+
+export async function handleLogout(){
+
+    const options = {
+        method: 'POST',
+        body: JSON.stringify({}),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    const res = await fetch('/form/logout', options)
+    const data = await res.json()
+    if(!res.ok){
+        throw new Error(`${data.name}: ${data.message}`)
+    }
+
+    console.log(data.message)
+    window.location.href = '/'
+
+}
+

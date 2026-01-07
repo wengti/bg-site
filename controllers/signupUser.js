@@ -15,6 +15,7 @@ export async function signup(req, res){
         if (!name || !username || !email || !password){
             const name = 'Incomplete input'
             const message = 'Not all input fields are filled.'
+            await db.close()
             return res.status(400).json({name, message})
         }
 
@@ -28,6 +29,7 @@ export async function signup(req, res){
         if(!pattern.test(username)){
             const name = 'Invalid username'
             const message = 'Invalid username. It should only contains a-z, A-Z, 0-9, _ or - and are within 1 to 20 characters.'
+            await db.close()
             return res.status(400).json({name , message})
         }
         
@@ -35,6 +37,7 @@ export async function signup(req, res){
         if(!validator.isEmail(email)){
             const name = 'Invalid email'
             const message = 'Invalid email format.'
+            await db.close()
             return res.status(400).json({name , message})
         }
 
@@ -48,6 +51,7 @@ export async function signup(req, res){
         if(check.rows.length > 0){
             const name = 'Repeated username or email.'
             const message = 'This username or email has been registered before.'
+            await db.close()
             return res.status(400).json({name, message})
         }
 
@@ -55,6 +59,7 @@ export async function signup(req, res){
         if(!validator.isStrongPassword(password)){
             const name = 'Weak Password.'
             const message = 'Password must contain at least 8 characters, 1 lowerCase, 1 upperCase, 1 number and 1 symbol.'
+            await db.close()
             return res.status(400).json({name, message})
         }
 
@@ -80,16 +85,14 @@ export async function signup(req, res){
         req.session.userId = ret.rows[0].id
 
         const message = 'Success: The user has been registered.'
+        await db.close()
         return res.status(201).json({message})
 
     }
     catch(err){
         const name = 'Server side error'
         const message = 'Server side error. Please try again.'
+        await db.close()
         return res.status(500).json(name, message)
     }
-    finally{
-        await db.close()
-    }
-
 }

@@ -11,6 +11,7 @@ await db.exec(`
         designer TEXT NOT NULL,
         price FLOAT NOT NULL,
         genre TEXT NOT NULL,
+        quantity INTEGER NOT NULL,
         img TEXT NOT NULL
     );
     CREATE EXTENSION IF NOT EXISTS unaccent;
@@ -19,7 +20,7 @@ await db.exec(`
 try {
     await db.transaction(async (tx) => {
 
-        for (let { title, designer, price, genre, img } of data) {
+        for (let { title, designer, price, genre, quantity, img } of data) {
 
             // Check if there are repeated item
             const ret = await tx.query(`
@@ -34,10 +35,10 @@ try {
             }
 
             await tx.query(`
-            INSERT INTO items (title, designer, price, genre, img)
-            VALUES ($1, $2, $3, $4, $5)
+            INSERT INTO items (title, designer, price, genre, quantity, img)
+            VALUES ($1, $2, $3, $4, $5, $6)
             `,
-                [title, designer, price, genre, img]
+                [title, designer, price, genre, quantity, img]
             )
         }
 
