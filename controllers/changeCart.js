@@ -87,22 +87,119 @@ export async function countCart(req, res) {
     const db = getTableConnection()
 
     try {
-        const finalRet = await db.query(`
+        const ret = await db.query(`
             SELECT SUM(order_quantity) AS total_order FROM orders
                 WHERE user_id = $1
                 GROUP BY user_id
             `,
             [req.session.userId]
         )
-        const { total_order: totalOrder } = finalRet.rows[0]
+
+        let totalOrder = 0
+        if (ret.rows.length !== 0) {
+            totalOrder = ret.rows[0].total_order
+        }
 
         await db.close()
-        return res.json({totalOrder})
+        return res.json({ totalOrder })
     }
     catch {
         const name = 'Server side error.'
         const message = 'Server side error.'
         await db.close()
-        return res.status(500).json({name, message})
+        return res.status(500).json({ name, message })
+    }
+}
+
+
+export async function listCart(req, res) {
+    const db = getTableConnection()
+
+    try {
+        const ret = await db.query(`
+            SELECT o.id, o.order_quantity, i.title, i.price FROM orders o
+                LEFT JOIN items i ON o.item_id = i.id
+                WHERE o.user_id = $1 
+            `,
+            [req.session.userId]
+        )
+
+        await db.close()
+        return res.json(ret.rows)
+
+
+    }
+    catch (err) {
+        const name = 'Server side error.'
+        const message = 'Server side error.'
+        await db.close()
+        return res.status(500).json({ name, message })
+    }
+}
+
+
+export async function delCart(req, res) {
+    const db = getTableConnection()
+
+    try {
+        const { orderId } = req.params
+
+        // Determine how many quantity and id are there in the order
+        const ret = await db.query(`
+            SELECT item_id, order_quantity FROM orders
+                WHERE id = $1
+            `,
+            [orderId]
+        )
+        const { item_id: itemId, order_quantity: orderQuantity } = ret.rows[0]
+
+        // Add them back to the stock
+        await db.query(`
+            UPDATE items
+                SET quantity = quantity + $1
+                WHERE id = $2
+            `,
+            [orderQuantity, itemId]
+        )
+
+        // Delete the order
+        await db.query(`
+            DELETE FROM orders
+                WHERE id = $1;
+            `,
+            [orderId]
+        )
+
+        await db.close()
+        return res.status(204).send()
+    }
+    catch (err) {
+        const name = 'Server side error.'
+        const message = 'Server side error.'
+        await db.close()
+        return res.status(500).json({ name, message })
+    }
+}
+
+export async function delCartAll(req, res) {
+    const db = getTableConnection()
+
+    try {
+        // DELETE ORDERS
+        await db.query(`
+            DELETE FROM orders
+                WHERE user_id = $1
+            `,
+            [req.session.userId]
+        )
+        
+        await db.close()
+        return res.status(204).send()
+    }
+    catch (err) {
+        const name = 'Server side error.'
+        const message = 'Server side error.'
+        await db.close()
+        return res.status(500).json({ name, message })
     }
 }

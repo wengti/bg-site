@@ -101,6 +101,10 @@ a:active{
     color: var(--bg-element);
 }
 
+.cart-container:hover{
+    cursor: pointer;
+}
+
 
 
 /********/
@@ -404,6 +408,9 @@ main {
 .cart-inner {
     width: 80%;
     max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .cart-title{
@@ -437,7 +444,8 @@ main {
 }
 
 .del-btn-container > i:hover{
-    color: var(--bg-element)
+    color: var(--bg-element);
+    cursor: pointer;
 }
 
 .total-price-container {
@@ -460,6 +468,24 @@ main {
 #checkout-btn:hover{
     width: 60%;
     max-width: 200px;
+    cursor: pointer;
+}
+
+.cart-hint{
+    text-align: center;
+
+    i {
+        font-size: 2rem;
+    }
+    
+    p, a{
+        font-size: 1rem;
+    }
+
+    a {
+        color: var(--bg-element);
+        text-decoration: underline;
+    }
 }
 
 
@@ -552,6 +578,17 @@ footer {
 
     .total-price-container{
         font-size: 1.5rem;
+    }
+
+    .cart-hint{
+
+        i{
+            font-size: 3rem;
+        }
+
+        p, a{
+            font-size: 1.5rem;
+        }
     }
 }
 

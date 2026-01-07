@@ -320,6 +320,7 @@ main {
 
 .form-hint{
     color: var(--bg-element);
+    text-decoration: underline;
 }
 
 

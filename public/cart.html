@@ -18,18 +18,18 @@
     <body>
         <header class='top-row'>
             <p class='greetings'>Welcome, <span id='user'>Guest</span>!</p>
-            <div class='cart-container'>
+            <div class='cart-container' id='cart-container'>
                 <span id='cart-count'>0</span>
-                <i class="fa-solid fa-basket-shopping"></i>
+                <i class="fa-solid fa-basket-shopping" id='cart-icon'></i>
             </div>
             <div class='hamburger-container'><i class="fa-solid fa-bars" id='hamburger'></i></div>
             <nav class='nav-menu'>
                 <ul>
                     <li class='collapse-btn-container'><i class="fa-solid fa-angles-up" id='collapse-btn'></i></li>
                     <a href='/'><li>Home</li></a>
-                    <a href='./login.html'><li>Login</li></a>
-                    <a href='./signup.html'><li>Signup</li></a>
-                    <li class='logout-btn-container'><button class='logout-btn'>Logout</button></li>
+                    <a href='./login.html' id='login-container'><li>Login</li></a>
+                    <a href='./signup.html' id='signup-container'><li>Signup</li></a>
+                    <li class='logout-btn-container' id='logout-btn-container'><button class='logout-btn' id='logout-btn'>Logout</button></li>
                 </ul>
             </nav>
         </header>
@@ -46,22 +46,8 @@
             </section>
 
             <section class='cart'>
-                <div class='cart-inner'>
-
-                    <p class='cart-title'>Your Shopping Cart</p>
-    
-                    <div class='cart-item'>
-                        <p class='item-title'>Ark Nova</p>
-                        <p class='item-price'>RM 299.00</p>
-                        <div class='del-btn-container'><i class="fa-solid fa-xmark"></i></div>
-                    </div>
-    
-                    
-    
-                    <p class='total-price-container'>Total: RM <span id='total-price'>299.00</span> </p>
-    
-                    <button id='checkout-btn'>Checkout</button>
-
+                <div class='cart-inner' id='cart-inner'>
+                    <!-- Insert order here -->
                 </div>
             </section>  
 

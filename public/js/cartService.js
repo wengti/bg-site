@@ -1,3 +1,5 @@
+import { renderCart, renderTopRow, renderCheckout } from './render.js'
+
 export async function handleAddToCart(event){
 
     const options = {
@@ -40,4 +42,37 @@ export async function getCartCount(){
 
     return data.totalOrder
 
+}
+
+
+export async function delOrder(event){
+
+    const options = {
+        method: 'DELETE'
+    }
+
+    const res = await fetch(`/cart/del/${event.target.dataset.orderId}`, options)
+    if(!res.ok){
+        const data = await res.json()
+        throw new Error(`${data.name}: ${data.message}`)
+    }
+
+    console.log('Success: The order has been deleted.')
+    await renderTopRow()
+    await renderCart()
+}
+
+export async function checkout(){
+    const options = {
+        method: 'DELETE'
+    }
+
+    const res = await fetch(`/cart/del/all`, options)
+    if(!res.ok){
+        const data = await res.json()
+        throw new Error(`${data.name}: ${data.message}`)
+    }
+
+    console.log('Success: The order has been completed.')
+    renderCheckout()
 }

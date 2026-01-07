@@ -1,11 +1,9 @@
 import { handleLogout } from './form.js'
-import { handleAddToCart, getCartCount } from './cartService.js'
+import { handleAddToCart, getCartCount, delOrder, checkout } from './cartService.js'
 import { handleMenuDisplay, directToLogin } from './utils.js'
 
 
 export async function renderItems(data = []) {
-
-
     let htmlStr = ''
 
     // If provided data is '', indicating no search result is relevant
@@ -137,9 +135,94 @@ export async function renderTopRow() {
 
         // Update cart count
         document.getElementById('cart-count').textContent = await getCartCount()
+
+
+        // Add Event Listener to the cart-icon
+        document.getElementById('cart-icon').addEventListener('click', function () {
+            console.log('hi')
+            window.location.href = '/cart.html'
+        })
     }
 
     document.getElementById('logout-btn').addEventListener('click', handleLogout)
     document.getElementById('hamburger').addEventListener('click', handleMenuDisplay)
     document.getElementById('collapse-btn').addEventListener('click', handleMenuDisplay)
+}
+
+export async function renderCart() {
+
+    const res = await fetch('/cart')
+    const data = await res.json()
+    if (!res.ok) {
+        throw new Error(`${data.name}: ${data.message}`)
+    }
+
+    // Provide hint to be back to home page if no order
+    // List out the cart item if there is order
+
+    let htmlStr = ''
+    let totalPrice = 0
+
+    if (data.length === 0) {
+        htmlStr += `
+            <div class='cart-hint'>
+                <i class="fa-solid fa-basket-shopping"></i>
+                <p>You havent placed any order.</p>
+                <a href='/'>Get started now!</a>
+            </div>
+        `
+
+        // Render the cart
+        document.getElementById('cart-inner').innerHTML = htmlStr
+    }
+    else {
+        htmlStr += `
+            <p class='cart-title'>Your Shopping Cart</p>
+        `
+
+        for (let { id: orderId, order_quantity: orderQuantity, title, price } of data) {
+            htmlStr += `
+                <div class='cart-item'>
+                    <p class='item-title'>${title}</p>
+                    <p class='item-price'>x${orderQuantity} RM ${price.toFixed(2)}</p>
+                    <div class='del-btn-container'>
+                        <i class="fa-solid fa-xmark del-btn" data-order-id = '${orderId}'></i>
+                    </div>
+                </div>
+            `
+
+            totalPrice += price * orderQuantity
+        }
+
+        htmlStr += `
+            <p class='total-price-container'>Total: RM <span id='total-price'>${totalPrice.toFixed(2)}</span></p>
+            <button id='checkout-btn'>Checkout</button>
+        `
+
+        // Render the cart
+        document.getElementById('cart-inner').innerHTML = htmlStr
+
+        // Add event listener
+        document.querySelectorAll('.del-btn').forEach(elem => {
+            elem.addEventListener('click', delOrder)
+        })
+
+        document.getElementById('checkout-btn').addEventListener('click', checkout)
+
+    }
+
+}
+
+export function renderCheckout() {
+
+    let htmlStr = `
+            <div class='cart-hint'>
+                <i class="fa-solid fa-basket-shopping"></i>
+                <p>You order has been processed.</p>
+                <a href='/'>Continue to shop!</a>
+            </div>
+        `
+
+    // Render the cart
+    document.getElementById('cart-inner').innerHTML = htmlStr
 }
