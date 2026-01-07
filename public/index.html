@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <title>BG2SELL</title>
+        <link rel='stylesheet' href='./css/index.css'>
+        <!-- Font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Carter+One&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" 
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </head>
+
+    <body>
+        <header class='top-row'>
+            <p class='greetings'>Welcome, <span id='user'>Guest</span>!</p>
+            <div class='hamburger-container'><i class="fa-solid fa-bars" id='hamburger'></i></div>
+            <nav class='nav-menu'>
+                <ul>
+                    <li class='collapse-btn-container'><i class="fa-solid fa-angles-up" id='collapse-btn'></i></li>
+                    <a href='/'><li>Home</li></a>
+                    <a href='./login.html'><li>Login</li></a>
+                    <a href='./signup.html'><li>Signup</li></a>
+                    <li><input type='text' placeholder='Search...' class='search-box' id='search-box'></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <section class='logo-row'>
+                <a href='/' class='logo-img-container'>
+                    <img src='./images/logo.png' class='logo-img'>
+                </a>
+                <div class='logo-text'>
+                    <h1>BG2SELL</h1>
+                    <h2>Affordable 2nd-hand bgs</h2>
+                </div>
+            </section>
+
+            <section class='genre-row'>
+                <p>View by genre</p>
+                <select name='genre-select' class='genre-select' id='genre-select'>
+                    <!-- Insert selectable options here -->
+                </select>
+            </section>
+
+            <section class='item-row'>
+                <!-- Insert item card here -->
+            </section>
+        </main>
+
+        <script src='./js/index.js' type='module'></script>
+    </body>
+    
+    <footer>
+        <p>Created by Weng Ti</p>
+    </footer>
+
+</html>

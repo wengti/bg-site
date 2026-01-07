@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <title>BG2SELL</title>
+        <link rel='stylesheet' href='./css/form.css'>
+        <!-- Font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Carter+One&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" 
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </head>
+
+    <body>
+        <header class='top-row'>
+            <p class='greetings'>Welcome, <span id='user'>Guest</span>!</p>
+            <div class='hamburger-container'><i class="fa-solid fa-bars" id='hamburger'></i></div>
+            <nav class='nav-menu'>
+                <ul>
+                    <li class='collapse-btn-container'><i class="fa-solid fa-angles-up" id='collapse-btn'></i></li>
+                    <a href='/'><li>Home</li></a>
+                    <a href='/login.html'><li>Login</li></a>
+                    <a href='./signup.html'><li>Signup</li></a>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <section class='logo-row'>
+                <a href='/' class='logo-img-container'>
+                    <img src='./images/logo.png' class='logo-img'>
+                </a>
+                <div class='logo-text'>
+                    <h1>BG2SELL</h1>
+                    <h2>Affordable 2nd-hand bgs</h2>
+                </div>
+            </section>
+
+            <form class='form'>
+
+                <p class='form-name'>Sign up</p>
+
+                <div class='form-inner-container'>
+                    <div class='form-field'>
+                        <label for='name'>Name </label>
+                        <input type='text' id='name' required>
+                    </div>
+    
+                    <div class='form-field'>
+                        <label for='username'>Username </label>
+                        <input type='text' id='username' required>
+                    </div>
+    
+                    <div class='form-field'>
+                        <label for='email'>Email </label>
+                        <input type='email' id='email' required>
+                    </div>
+    
+                    <div class='form-field'>
+                        <label for='password'>Password </label>
+                        <input type='password' id='password' required>
+                    </div>
+                </div>
+
+
+                <input type='button' value='Create Account' class='form-btn'>
+
+
+                <p class='form-msg'>
+                    Already registered? <a href='./login.html'><span class='form-hint'>Log in here.</span></a>
+                </p>
+            </form>
+
+
+
+            
+        </main>
+
+        <script src='./js/signup.js' type='module'></script>
+    </body>
+    
+    <footer>
+        <p>Created by Weng Ti</p>
+    </footer>
+
+</html>
