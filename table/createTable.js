@@ -13,7 +13,7 @@ await db.exec(`
         genre TEXT NOT NULL,
         img TEXT NOT NULL
     );
-    CREATE EXTENSION unaccent;
+    CREATE EXTENSION IF NOT EXISTS unaccent;
     `)
 
 try {

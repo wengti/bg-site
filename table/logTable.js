@@ -3,13 +3,13 @@ import { getTableConnection } from './getTableConnection.js'
 
 const db = getTableConnection()
 
-const ret = await db.exec(`
+const ret = await db.query(`
     SELECT * FROM items
     `)
 
 await db.close()
 
-const result = ret[0].rows.map( ({id, title, designer, price, genre, img}) => {
+const result = ret.rows.map( ({id, title, designer, price, genre, img}) => {
     return {
         id,
         title,

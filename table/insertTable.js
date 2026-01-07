@@ -22,8 +22,6 @@ try {
                 throw new Error(`Repeated item found: ${ret.rows[0].title}`)
             }
 
-            await tx.exec(`ALTER SEQUENCE items_id_seq INCREMENT BY 1`)
-
             await tx.query(`
             INSERT INTO items (title, designer, price, genre, img)
             VALUES ($1, $2, $3, $4, $5)

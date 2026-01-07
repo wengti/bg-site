@@ -1,5 +1,3 @@
-const a = 'asdxxxs'
+const pattern = /^[a-zA-Z0-9_-]{1,20}$/
 
-if(a.includes('ds')){
-    console.log('true')
-}
+console.log(pattern.test('sdasafS@'))
