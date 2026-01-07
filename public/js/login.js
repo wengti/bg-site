@@ -1,4 +1,5 @@
-import {handleMenuDisplay} from './utils.js'
+import { handleMenuDisplay } from './utils.js'
+import { handleLogin } from './form.js'
 
 
 // Get element control
@@ -10,6 +11,7 @@ import {handleMenuDisplay} from './utils.js'
 // Add Event Listener
 document.getElementById('hamburger').addEventListener('click', handleMenuDisplay)
 document.getElementById('collapse-btn').addEventListener('click', handleMenuDisplay)
+document.getElementById('form').addEventListener('submit', handleLogin)
 
 // Functions
 

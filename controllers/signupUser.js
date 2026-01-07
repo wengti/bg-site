@@ -70,6 +70,15 @@ export async function signup(req, res){
             [name, username, email, hashed]
         )
         
+        // Create a session and insert the userId
+        const ret = await db.query(`
+            SELECT id FROM users
+                WHERE username = $1
+            `,
+            [username]
+        )
+        req.session.userId = ret.rows[0].id
+
         const message = 'Success: The user has been registered.'
         return res.status(201).json({message})
 

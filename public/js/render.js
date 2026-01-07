@@ -99,3 +99,18 @@ export async function handleSearch(){
 
     await renderItems(data)
 }
+
+export async function renderTopRow(){
+
+    const res = await fetch('/user/me')
+    const data = await res.json()
+    if(!res.ok){
+        throw new Error(`${data.name}: ${data.message}`)
+    }
+
+    // Only do something if the return data indicates that it has been logged in
+    const {isLoggedIn, name} = data
+    if(isLoggedIn){
+        document.getElementById('user').textContent = name
+    }
+}

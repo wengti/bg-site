@@ -25,9 +25,36 @@ export async function handleSignup(event){
 
     console.log(data.message)
     window.location.href = '/'
-
-    // RENDER name, cart, top banner, logout
-
     
+}
+
+
+export async function handleLogin(event){
+    event.preventDefault()
+    
+    const username = document.getElementById('username').value.trim()
+    const password = document.getElementById('password').value
+
+    const options = {
+        method: 'POST',
+        body: JSON.stringify({
+            username,
+            password
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    const res = await fetch('/form/login', options)
+    const data = await res.json()
+    if(!res.ok){
+        document.getElementById('form-msg').style.color = 'red'
+        document.getElementById('form-msg').textContent = data.message
+        throw new Error(`${data.name}: ${data.message}`)
+    }
+
+    console.log(data.message)
+    window.location.href='/'
 }
 

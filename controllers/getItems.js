@@ -17,8 +17,7 @@ export async function getItems(req, res) {
             ret = await db.query(`
                 SELECT * FROM items
                     WHERE unaccent(title) ILIKE '%${search}%' OR
-                          unaccent(designer) ILIKE '%${search}%' OR
-                          unaccent(genre) ILIKE '%${search}%'
+                          unaccent(designer) ILIKE '%${search}%'
                 `)
         }
 

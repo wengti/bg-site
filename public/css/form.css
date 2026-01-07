@@ -21,6 +21,9 @@
     --element-border: 1px solid #ffc300;
     --element-border-radius: 5px;
 
+    --filter-border: 1px solid #404040;
+    --filter-bg: #808080;
+
     --item-border-radius: 10px;
 }
 
@@ -31,7 +34,7 @@
 }
 
 ::placeholder{
-    color: black;
+    color: white;
 }
 
 body{
@@ -85,12 +88,18 @@ a:active{
     z-index: 2;
     top: 0;
     transition: all 0.5s;
+    gap: 0.1em;
 }
 
 .greetings {
     font-size: 0.8rem;
 }
 
+.cart-container{
+    display: none;
+    margin-left: auto;
+    color: var(--bg-element);
+}
 
 
 /********/
@@ -135,12 +144,26 @@ a:active{
 }
 
 .search-box{
-    border: var(--element-border);
+    border: var(--filter-border);
     border-radius: var(--element-border-radius);
+    background-color: var(--filter-bg);
     padding-left: .5em ;
     height: 25px;
     font-family: var(--font-primary);
+    color: white;
+}
+
+.logout-btn-container{
+    display: none;
+}
+
+.logout-btn{
     background-color: var(--bg-element);
+    border: var(--element-border);
+    border-radius: var(--element-border-radius);
+    height: 25px;
+    padding: 0 1em;
+    font-weight: bold;
 }
 
 #hamburger:hover{
@@ -321,7 +344,7 @@ footer {
 /* *********** */
 /* Media query */
 /* *********** */
-@media (min-width: 520px){
+@media (min-width: 600px){
 
     main{
         flex-direction: row;
@@ -331,6 +354,10 @@ footer {
         display: none;
     }
 
+    .cart-container{
+        height: 25px;
+    }
+    
     .nav-menu {
         position: static;
         top: unset;
