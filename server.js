@@ -6,9 +6,11 @@ import { cartRouter } from './router/cartRouter.js'
 import session from 'express-session'
 import 'dotenv/config'
 import cors from 'cors'
+import { initializeTable } from './table/initializeTable.js'
 
 const PORT = 8000
 const secret = process.env.SESSION_SECRET
+await initializeTable()
 
 const app = express()
 
