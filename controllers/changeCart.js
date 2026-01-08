@@ -1,4 +1,6 @@
 import { getTableConnection } from '../table/getTableConnection.js'
+import Stripe from 'stripe'
+import 'dotenv/config'
 
 export async function addToCart(req, res) {
 
@@ -192,11 +194,58 @@ export async function delCartAll(req, res) {
             `,
             [req.session.userId]
         )
-        
+
         await db.close()
         return res.status(204).send()
     }
     catch (err) {
+        const name = 'Server side error.'
+        const message = 'Server side error.'
+        await db.close()
+        return res.status(500).json({ name, message })
+    }
+}
+
+export async function checkout(req, res) {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+    const db = getTableConnection()
+
+    try {
+
+        const orderRet = await db.query(`
+            SELECT o.order_quantity, i.title, i.price FROM orders o
+                LEFT JOIN items i ON o.item_id = i.id
+                WHERE o.user_id = $1
+            `,
+            [req.session.userId]
+        )
+
+        const line_items = orderRet.rows.map(order => {
+            return {
+                price_data: {
+                    currency: 'myr',
+                    product_data: {
+                        name: order.title,
+                    },
+                    unit_amount: order.price * 100, // Evaluated in smallest unit, sen
+                },
+                quantity: order.order_quantity,
+            }
+        })
+
+        const session = await stripe.checkout.sessions.create({
+            mode: 'payment',
+            payment_method_types: ['card'],
+            line_items,
+            success_url: process.env.SUCCESS_URL,
+            cancel_url: process.env.SERVER_URL
+        })
+
+        await db.close()
+        return res.json({ url: session.url })
+    }
+    catch (err) {
+        console.log(err)
         const name = 'Server side error.'
         const message = 'Server side error.'
         await db.close()

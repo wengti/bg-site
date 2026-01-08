@@ -1,6 +1,7 @@
 import { renderCart, renderTopRow, renderCheckout } from './render.js'
 
-export async function handleAddToCart(event){
+
+export async function handleAddToCart(event) {
 
     const options = {
         method: 'POST',
@@ -15,11 +16,11 @@ export async function handleAddToCart(event){
     // 
     const res = await fetch('/cart/add', options)
     const data = await res.json()
-    if(!res.ok){
+    if (!res.ok) {
         throw new Error(`${data.name}: ${data.message}`)
     }
 
-    const {message, curQuantity} = data
+    const { message, curQuantity } = data
     console.log(message)
 
     // Update stock count 
@@ -32,11 +33,11 @@ export async function handleAddToCart(event){
 }
 
 
-export async function getCartCount(){
+export async function getCartCount() {
 
     const res = await fetch('/cart/count')
     const data = await res.json()
-    if(!res.ok){
+    if (!res.ok) {
         throw new Error(`${data.name}: ${data.message}`)
     }
 
@@ -45,14 +46,14 @@ export async function getCartCount(){
 }
 
 
-export async function delOrder(event){
+export async function delOrder(event) {
 
     const options = {
         method: 'DELETE'
     }
 
     const res = await fetch(`/cart/del/${event.target.dataset.orderId}`, options)
-    if(!res.ok){
+    if (!res.ok) {
         const data = await res.json()
         throw new Error(`${data.name}: ${data.message}`)
     }
@@ -62,17 +63,35 @@ export async function delOrder(event){
     await renderCart()
 }
 
-export async function checkout(){
+export async function checkout() {
+    const options = {
+        method: 'POST',
+        body: JSON.stringify({}),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    const res = await fetch('/cart/checkout', options)
+    const data = await res.json()
+    if(!res.ok){
+        throw new Error(`${data.name}: ${data.message}`)
+    }
+
+    // Redirect to payment page by Stripe
+    window.location.href = data.url
+}
+
+export async function delCartAll(){
+    
     const options = {
         method: 'DELETE'
     }
-
+    
     const res = await fetch(`/cart/del/all`, options)
     if(!res.ok){
         const data = await res.json()
         throw new Error(`${data.name}: ${data.message}`)
     }
 
-    console.log('Success: The order has been completed.')
-    renderCheckout()
 }

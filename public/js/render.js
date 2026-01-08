@@ -154,6 +154,7 @@ export async function renderCart() {
     const res = await fetch('/cart')
     const data = await res.json()
     if (!res.ok) {
+        window.location.href = '/'
         throw new Error(`${data.name}: ${data.message}`)
     }
 
@@ -220,6 +221,20 @@ export function renderCheckout() {
                 <i class="fa-solid fa-basket-shopping"></i>
                 <p>You order has been processed.</p>
                 <a href='/'>Continue to shop!</a>
+            </div>
+        `
+
+    // Render the cart
+    document.getElementById('cart-inner').innerHTML = htmlStr
+}
+
+export function renderFailedCheckout() {
+
+    let htmlStr = `
+            <div class='cart-hint'>
+                <i class="fa-solid fa-exclamation"></i>
+                <p>You order is not completed.</p>
+                <a href='/cart.html'>Please try again!</a>
             </div>
         `
 
