@@ -272,16 +272,14 @@ export async function checkout(req, res) {
 
     try {
 
-        console.log('Here')
         const orderRet = await db.query(`
             SELECT o.order_quantity, i.title, i.price FROM orders o
                 LEFT JOIN items i ON o.item_id = i.id
-                WHERE o.user_id = $1
+                WHERE o.user_id = $1 AND order_quantity > 0
             `,
             [req.session.userId]
         )
 
-        console.log('Here 2')
         const line_items = orderRet.rows.map(order => {
             return {
                 price_data: {
@@ -295,7 +293,6 @@ export async function checkout(req, res) {
             }
         })
 
-        console.log('Here 3')
         const session = await stripe.checkout.sessions.create({
             mode: 'payment',
             payment_method_types: ['card'],
@@ -303,13 +300,11 @@ export async function checkout(req, res) {
             success_url: process.env.SUCCESS_URL,
             cancel_url: process.env.SERVER_URL
         })
-        console.log('Here 4')
 
         await db.end()
         return res.json({ url: session.url })
     }
     catch (err) {
-        console.log(err)
         const name = 'Server side error.'
         const message = 'Server side error.'
         await db.end()
