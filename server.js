@@ -15,6 +15,10 @@ const app = express()
 
 app.use(cors()) // Allow this application to communicate with Stripe API (payment gateway)
 app.use(express.json()) // Convert incoming request body into object
+
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
 app.use(sessionMiddleware)
 
 /*
