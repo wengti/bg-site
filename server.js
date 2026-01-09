@@ -3,18 +3,22 @@ import { apiRouter } from './router/apiRouter.js'
 import { formRouter } from './router/formRouter.js'
 import { userRouter } from './router/userRouter.js'
 import { cartRouter } from './router/cartRouter.js'
+import { sessionMiddleware } from './middleware/session-config.js'
 import session from 'express-session'
 import 'dotenv/config'
 import cors from 'cors'
 
 const PORT = 8000
-const secret = process.env.SESSION_SECRET
+
 
 const app = express()
 
 app.use(cors()) // Allow this application to communicate with Stripe API (payment gateway)
 app.use(express.json()) // Convert incoming request body into object
+app.use(sessionMiddleware)
 
+/*
+const secret = process.env.SESSION_SECRET
 app.use(session({
     secret,
     resave: false,
@@ -25,6 +29,7 @@ app.use(session({
         httpOnly: true
     }
 }))
+*/
 
 app.use(express.static('public'))
 
