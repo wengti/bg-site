@@ -14,7 +14,7 @@
                 var(--bg-element) 90%, var(--bg-element) 98%, 
                 var(--bg-primary) 98%, var(--bg-primary) 100%);
 
-    --font-color: whitesmoke;
+    --font-color: #f5f5f5;
     --font-primary: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --font-logo: 'Carter One', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
