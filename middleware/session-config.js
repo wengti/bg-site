@@ -1,22 +1,20 @@
 // session-config.js
 import session from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
-import pg from 'pg';
+import { getTableConnection } from '../table/getTableConnection.js';
+import 'dotenv/config'
 
-const { Pool } = pg;
 
-const pool = new Pool({
-  connectionString: process.env.SUPABASE_CONNECTION_STRING,
-  ssl: process.env.NODE_ENV === 'production' 
-    ? { rejectUnauthorized: false } 
-    : false
-});
+// import pg from 'pg';
+
+// const { Pool } = pg;
+
 
 const PgSession = connectPgSimple(session);
 
 export const sessionMiddleware = session({
   store: new PgSession({
-    pool,
+    pool: getTableConnection(),
     tableName: 'user_sessions',
     createTableIfMissing: true, // Auto-create table
   }),

@@ -12,7 +12,10 @@ export function getTableConnection() {
     // Using PG instead
     const connectionString = process.env.SUPABASE_CONNECTION_STRING
     return new Pool({
-        connectionString
+        connectionString,
+        ssl: process.env.NODE_ENV === 'production'
+            ? { rejectUnauthorized: false }
+            : false
     })
 
 }
