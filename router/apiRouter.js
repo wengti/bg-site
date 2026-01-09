@@ -1,5 +1,6 @@
 import express from 'express'
 import { getItems, getGenre } from '../controllers/getItems.js'
+import { checkAuth } from '../middleware/middleware.js'
 
 export const apiRouter = express.Router()
 apiRouter.get('/', getItems)

@@ -17,6 +17,9 @@ export async function handleAddToCart(event) {
     const res = await fetch('/cart/add', options)
     const data = await res.json()
     if (!res.ok) {
+        if (data.name === 'lowStock'){
+            alert(data.message)
+        }
         throw new Error(`${data.name}: ${data.message}`)
     }
 

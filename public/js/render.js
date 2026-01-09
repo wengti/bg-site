@@ -50,10 +50,31 @@ export async function renderItems(data = []) {
     //Render the items
     document.querySelector('.item-row').innerHTML = htmlStr
 
-    // Direct the user to login page
-    document.querySelectorAll('.cart-btn').forEach(elem => {
-        elem.addEventListener('click', directToLogin)
-    })
+
+    // Check if the user logs in to decide what the add to cart btn should do
+    const res = await fetch('/user/me')
+    const loginData = await res.json()
+    if (!res.ok) {
+        throw new Error(`${loginData.name}: ${loginData.message}`)
+    }
+
+    // Only do something if the return loginData indicates that it has been logged in
+    const { isLoggedIn, name } = loginData
+    if (isLoggedIn){
+        //Enable the add to cart actions if the user is logged in
+        document.querySelectorAll('.cart-btn').forEach(elem => {
+            elem.removeEventListener('click', directToLogin)
+            elem.addEventListener('click', handleAddToCart)
+        })
+    } else {
+        // Direct the user to login page
+        document.querySelectorAll('.cart-btn').forEach(elem => {
+            elem.removeEventListener('click', handleAddToCart)
+            elem.addEventListener('click', directToLogin)
+        })
+    }
+
+
 }
 
 export async function renderGenre() {
@@ -127,19 +148,12 @@ export async function renderTopRow() {
         document.getElementById('signup-container').style.display = 'none'
         document.getElementById('logout-btn-container').style.display = 'block'
 
-        //Enable the add to cart actions if the user is logged in
-        document.querySelectorAll('.cart-btn').forEach(elem => {
-            elem.removeEventListener('click', directToLogin)
-            elem.addEventListener('click', handleAddToCart)
-        })
-
         // Update cart count
         document.getElementById('cart-count').textContent = await getCartCount()
 
 
         // Add Event Listener to the cart-icon
         document.getElementById('cart-icon').addEventListener('click', function () {
-            console.log('hi')
             window.location.href = '/cart.html'
         })
     }

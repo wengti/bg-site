@@ -7,55 +7,52 @@ export async function addToCart(req, res) {
     const db = getTableConnection()
 
     try {
-        // Check if there is at least 1 for that item
+
         const { itemId } = req.body
-        const ret = await db.query(`
-            SELECT quantity FROM items
-                WHERE id = $1
-            `,
-            [itemId]
-        )
-        const { quantity } = ret.rows[0]
 
-        if (quantity <= 0) {
-            await db.end()
-            const name = 'Insufficient stock.'
-            const message = 'This item is out of stock.'
-            return res.status(400).json({ name, message })
-        }
-
-
-        // Remove 1 quantity from the items table
-        await db.query(`
-            UPDATE items
-                SET
-                    quantity = quantity - 1
-                WHERE
-                    id = $1
-            `,
-            [itemId]
-        )
 
         // Check if this item is in orders table
         const isOrdered = await db.query(`
-            SELECT * FROM orders
-                WHERE user_id = $1 AND item_id = $2
+            SELECT o.order_quantity, i.quantity FROM orders o
+                LEFT JOIN items i ON i.id = o.item_id
+                WHERE o.item_id = $1 AND o.user_id = $2
             `,
-            [req.session.userId, itemId]
+            [itemId, req.session.userId]
         )
 
 
-        // Add 1 quantity to the orders table
+        // If this is ordered before
         if (isOrdered.rows.length > 0) {
+
+            // First check if there are sufficient quantity to be ordered
+            const { quantity, order_quantity: orderQuantity } = isOrdered.rows[0] //Available quantity from the items
+            if (orderQuantity >= quantity) {
+                await db.end()
+                const name = 'lowStock'
+                const message = 'This item is out of stock.'
+                return res.status(400).json({ name, message })
+            }
+
+            // After confirm that there is enough stock to be ordered
+            // Add to the cart
+            // Because the order quantity here is before add-to-cart, so need to +1
+            const newOrderQuantity = orderQuantity + 1
             await db.query(`
                 UPDATE orders
                     SET
-                        order_quantity = order_quantity + 1
+                        order_quantity = $1
                     WHERE
-                        user_id = $1 AND item_id = $2
+                        user_id = $2 AND item_id = $3
                 `,
-                [req.session.userId, itemId]
+                [newOrderQuantity, req.session.userId, itemId]
             )
+
+            // check the latest order quantity
+
+            await db.end()
+            const message = 'Success: The item has been added to the cart.'
+            const curQuantity = quantity - newOrderQuantity
+            return res.json({ message, curQuantity })
         }
         else {
             await db.query(`
@@ -64,17 +61,24 @@ export async function addToCart(req, res) {
                 `,
                 [req.session.userId, itemId]
             )
+
+            const finalRet = await db.query(`
+                SELECT quantity FROM items
+                    WHERE id = $1
+                `,
+                [itemId]
+            )
+
+            await db.end()
+            const message = 'Success: The item has been added to the cart.'
+            const curQuantity = finalRet.rows[0].quantity - 1
+            return res.json({ message, curQuantity })
         }
-
-
-        await db.end()
-        const message = 'Success: The item has been added to the cart.'
-        const curQuantity = quantity - 1
-        return res.json({ message, curQuantity })
 
 
     }
     catch (err) {
+        console.error(err)
         const name = 'Server side error.'
         const message = 'Server side error.'
         await db.end()
@@ -84,8 +88,38 @@ export async function addToCart(req, res) {
 }
 
 
+// Update the maximum number of items that is possible to be ordered
+async function checkCartMax(req) {
+
+    const db = getTableConnection()
+    // In case where multiple users add to cart for the same items
+    // Make sure the items that are added to cart still match what is available in items
+    const initialRet = await db.query(`
+            SELECT o.id, o.order_quantity, i.quantity FROM orders o
+                LEFT JOIN items i ON i.id = o.item_id
+                WHERE user_id = $1
+            `,
+        [req.session.userId]
+    )
+
+    for (let { id: orderId, order_quantity: orderQuantity, quantity } of initialRet.rows) {
+        if (orderQuantity > quantity) {
+            await db.query(`
+                    UPDATE orders
+                        SET
+                            order_quantity = $1
+                        WHERE
+                            id = $2
+                    `,
+                [quantity, orderId]
+            )
+        }
+    }
+}
+
 export async function countCart(req, res) {
 
+    await checkCartMax(req)
     const db = getTableConnection()
 
     try {
@@ -118,10 +152,11 @@ export async function listCart(req, res) {
     const db = getTableConnection()
 
     try {
+
         const ret = await db.query(`
             SELECT o.id, o.order_quantity, i.title, i.price FROM orders o
                 LEFT JOIN items i ON o.item_id = i.id
-                WHERE o.user_id = $1 
+                WHERE o.user_id = $1 AND o.order_quantity > 0
             `,
             [req.session.userId]
         )
@@ -155,14 +190,14 @@ export async function delCart(req, res) {
         )
         const { item_id: itemId, order_quantity: orderQuantity } = ret.rows[0]
 
-        // Add them back to the stock
-        await db.query(`
-            UPDATE items
-                SET quantity = quantity + $1
-                WHERE id = $2
-            `,
-            [orderQuantity, itemId]
-        )
+        // // Add them back to the stock
+        // await db.query(`
+        //     UPDATE items
+        //         SET quantity = quantity + $1
+        //         WHERE id = $2
+        //     `,
+        //     [orderQuantity, itemId]
+        // )
 
         // Delete the order
         await db.query(`
@@ -187,13 +222,38 @@ export async function delCartAll(req, res) {
     const db = getTableConnection()
 
     try {
-        // DELETE ORDERS
+        // This indicates the order has been completed
+        // so the item must be cleared from the items table
+
+        // First loop through all the orders and for each item_id remove that amount 
+        const orderRet = await db.query(`
+            SELECT item_id, order_quantity FROM orders
+                WHERE user_id = $1
+            `,
+            [req.session.userId]
+        )
+
+        for (let { item_id: itemId, order_quantity: orderQuantity } of orderRet.rows) {
+            await db.query(`
+                UPDATE items
+                    SET 
+                        quantity = quantity - $1
+                    WHERE 
+                        id = $2
+                `,
+                [orderQuantity, itemId]
+            )
+        }
+
+        // DELETE ORDERS from orders
         await db.query(`
             DELETE FROM orders
                 WHERE user_id = $1
             `,
             [req.session.userId]
         )
+
+
 
         await db.end()
         return res.status(204).send()
@@ -245,7 +305,6 @@ export async function checkout(req, res) {
         return res.json({ url: session.url })
     }
     catch (err) {
-        console.log(err)
         const name = 'Server side error.'
         const message = 'Server side error.'
         await db.end()
