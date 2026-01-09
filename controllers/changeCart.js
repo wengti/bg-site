@@ -18,7 +18,7 @@ export async function addToCart(req, res) {
         const { quantity } = ret.rows[0]
 
         if (quantity <= 0) {
-            await db.close()
+            await db.end()
             const name = 'Insufficient stock.'
             const message = 'This item is out of stock.'
             return res.status(400).json({ name, message })
@@ -67,7 +67,7 @@ export async function addToCart(req, res) {
         }
 
 
-        await db.close()
+        await db.end()
         const message = 'Success: The item has been added to the cart.'
         const curQuantity = quantity - 1
         return res.json({ message, curQuantity })
@@ -77,7 +77,7 @@ export async function addToCart(req, res) {
     catch (err) {
         const name = 'Server side error.'
         const message = 'Server side error.'
-        await db.close()
+        await db.end()
         return res.status(500).json({ name, message })
     }
 
@@ -102,13 +102,13 @@ export async function countCart(req, res) {
             totalOrder = ret.rows[0].total_order
         }
 
-        await db.close()
+        await db.end()
         return res.json({ totalOrder })
     }
     catch {
         const name = 'Server side error.'
         const message = 'Server side error.'
-        await db.close()
+        await db.end()
         return res.status(500).json({ name, message })
     }
 }
@@ -126,7 +126,7 @@ export async function listCart(req, res) {
             [req.session.userId]
         )
 
-        await db.close()
+        await db.end()
         return res.json(ret.rows)
 
 
@@ -134,7 +134,7 @@ export async function listCart(req, res) {
     catch (err) {
         const name = 'Server side error.'
         const message = 'Server side error.'
-        await db.close()
+        await db.end()
         return res.status(500).json({ name, message })
     }
 }
@@ -172,13 +172,13 @@ export async function delCart(req, res) {
             [orderId]
         )
 
-        await db.close()
+        await db.end()
         return res.status(204).send()
     }
     catch (err) {
         const name = 'Server side error.'
         const message = 'Server side error.'
-        await db.close()
+        await db.end()
         return res.status(500).json({ name, message })
     }
 }
@@ -195,13 +195,13 @@ export async function delCartAll(req, res) {
             [req.session.userId]
         )
 
-        await db.close()
+        await db.end()
         return res.status(204).send()
     }
     catch (err) {
         const name = 'Server side error.'
         const message = 'Server side error.'
-        await db.close()
+        await db.end()
         return res.status(500).json({ name, message })
     }
 }
@@ -241,14 +241,14 @@ export async function checkout(req, res) {
             cancel_url: process.env.SERVER_URL
         })
 
-        await db.close()
+        await db.end()
         return res.json({ url: session.url })
     }
     catch (err) {
         console.log(err)
         const name = 'Server side error.'
         const message = 'Server side error.'
-        await db.close()
+        await db.end()
         return res.status(500).json({ name, message })
     }
 }

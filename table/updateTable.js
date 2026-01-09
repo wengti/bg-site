@@ -12,4 +12,4 @@ await db.query(`
 
 console.log('Succesful data update.')
 
-await db.close()
+await db.end()

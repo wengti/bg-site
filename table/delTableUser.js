@@ -2,8 +2,8 @@ import { getTableConnection } from './getTableConnection.js'
 
 const db = getTableConnection()
 
-await db.exec(`
+await db.query(`
     DROP TABLE IF EXISTS users
     `)
 
-await db.close()
+await db.end()

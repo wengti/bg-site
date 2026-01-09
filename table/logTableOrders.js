@@ -6,6 +6,6 @@ const ret = await db.query(`
     SELECT * FROM orders
     `)
 
-await db.close()
+await db.end()
 
 console.table(ret.rows)

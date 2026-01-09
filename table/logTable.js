@@ -7,7 +7,7 @@ const ret = await db.query(`
     SELECT * FROM items
     `)
 
-await db.close()
+await db.end()
 
 const result = ret.rows.map( ({id, title, designer, price, genre, quantity, img}) => {
     return {

@@ -7,6 +7,6 @@ const ret = await db.query(`
     SELECT * FROM users
     `)
 
-await db.close()
+await db.end()
 
 console.table(ret.rows)

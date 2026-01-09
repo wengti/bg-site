@@ -4,7 +4,7 @@ import { getTableConnection } from './getTableConnection.js'
 const db = getTableConnection()
 
 try {
-    await db.exec(`
+    await db.query(`
             CREATE TABLE IF NOT EXISTS orders(
                 id SERIAL PRIMARY KEY,
                 user_id INTEGER NOT NULL REFERENCES users(id),
@@ -20,5 +20,5 @@ catch (err) {
     console.error(err)
 }
 finally {
-    await db.close()
+    await db.end()
 }

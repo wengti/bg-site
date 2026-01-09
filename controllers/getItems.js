@@ -25,12 +25,12 @@ export async function getItems(req, res) {
                 `)
         }
 
-        await db.close()
+        await db.end()
         return res.json(ret.rows)
 
     }
     catch(err){
-        await db.close()
+        await db.end()
         return res.status(500).json(err)
     }
 }
@@ -43,11 +43,11 @@ export async function getGenre(req, res){
             SELECT DISTINCT genre FROM items
             `)
         
-        await db.close()
+        await db.end()
         return res.json(ret.rows)
     }
     catch(err){
-        await db.close()
+        await db.end()
         return res.status(500).json(err)
     }
 

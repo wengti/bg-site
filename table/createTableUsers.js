@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs'
 const db = getTableConnection()
 
 try {
-    await db.exec(`
+    await db.query(`
             CREATE TABLE IF NOT EXISTS users(
                 id SERIAL PRIMARY KEY,
                 name TEXT NOT NULL,
@@ -30,5 +30,5 @@ catch (err) {
     console.error(err)
 }
 finally {
-    await db.close()
+    await db.end()
 }

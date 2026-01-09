@@ -6,7 +6,7 @@ export async function getMyInfo(req, res) {
     const db = getTableConnection()
     try {
         if (!req.session.userId) {
-            await db.close()
+            await db.end()
             return res.json({ 
                 isLoggedIn: false 
             })
@@ -19,7 +19,7 @@ export async function getMyInfo(req, res) {
                 [req.session.userId]
             )
 
-            await db.close()
+            await db.end()
             
             const { name } = ret.rows[0]
             return res.json({ 
@@ -31,7 +31,7 @@ export async function getMyInfo(req, res) {
     catch (err) {
         const name = 'Unaccessible user info'
         const message = 'User info is not retrievable.'
-        await db.close()
+        await db.end()
         return res.status(500).json({name, message})
     }
 

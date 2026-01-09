@@ -12,7 +12,7 @@ export async function login(req, res){
         if(!username || !password){
             const name = 'Incomplete Credentials'
             const message = 'Not all the input fields are filled.'
-            await db.close()
+            await db.end()
             return res.status(400).json({name, message})
         }
 
@@ -32,20 +32,20 @@ export async function login(req, res){
 
 
             const message = 'Success: The user has been logged in.'
-            await db.close()
+            await db.end()
             return res.json({message})
         }
         else{
             const name = 'Invalid credentials.'
             const message = 'Invalid username or password.'
-            await db.close()
+            await db.end()
             return res.status(401).json({name, message})
         }
     }
     catch(err){
         const name = 'Server side error.'
         const message = 'Server side error.'
-        await db.close()
+        await db.end()
         return res.status(500).json({name, message})
     }
 
