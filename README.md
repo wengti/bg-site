@@ -32,7 +32,7 @@ A mock-up e-commerce site that sells 2nd hand board game with a backend (***Expr
     * Important to parse request body into JS object format.
 
 2. Use Router for a cleaner code
-    ```
+    ```js
     // In server.js
     app.use('/api', apiRouter)
 
@@ -48,7 +48,7 @@ A mock-up e-commerce site that sells 2nd hand board game with a backend (***Expr
     ```
 
 3. Make use of middleware to prevent unauthenticated access.
-    ```
+    ```js
     export function checkAuth(req, res, next){
 
         if(!req.session.userId){
@@ -79,7 +79,7 @@ A mock-up e-commerce site that sells 2nd hand board game with a backend (***Expr
     * `500` - Server side error
 
 6. Always try, catch and return in backend's controller
-    ```
+    ```js
     try{
 
         //Your controller's main code
@@ -105,7 +105,7 @@ A mock-up e-commerce site that sells 2nd hand board game with a backend (***Expr
     * Other package required: `connect-pg-simple` ([package](https://www.npmjs.com/package/connect-pg-simple))
 
     * The setup:
-        ```
+        ```js
         import session from 'express-session';
         import connectPgSimple from 'connect-pg-simple';
         import { getTableConnection } from '../table/getTableConnection.js';
@@ -162,7 +162,7 @@ A mock-up e-commerce site that sells 2nd hand board game with a backend (***Expr
 
 ## Key takeaways for ***Supabase***
 1. Host the database on a backend platform instead of using memory such as PG-lite.
-    ```
+    ```js
     import { Pool } from 'pg'
     export function getTableConnection() {
         const connectionString = process.env.SUPABASE_CONNECTION_STRING
@@ -192,7 +192,7 @@ A mock-up e-commerce site that sells 2nd hand board game with a backend (***Expr
 
 2. How to search for text that have accents such as á, à, â, ä, ã...
     - When creating the table
-        ```
+        ```js
         await db.query(`
         CREATE EXTENSION IF NOT EXISTS unaccent
         `)
@@ -216,7 +216,7 @@ A mock-up e-commerce site that sells 2nd hand board game with a backend (***Expr
     - Once completed or failed, it redirects the user back to the `success_url` or `cancel_url` respectively.
 
 2. Remember to enable `cors()` ([package](https://www.npmjs.com/package/cors))
-    ```
+    ```js
     app.use(
         cors({
             origin: "http://localhost:5500",
