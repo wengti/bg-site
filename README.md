@@ -159,6 +159,12 @@ A mock-up e-commerce site that sells 2nd hand board game with a backend (***Expr
             * Without trusting this proxy, the connection is deemed not secure and can break the cookie settings.
 
 
+    * ***IMPORTANT!*** 
+        * The backend only stores part of the cookie string.
+        * The user have the full cookie string.
+        * Therefore, the owner of this site cannot simply access any user's session unless he has the full cookie string from the user.
+
+
 
 ## Key takeaways for ***Supabase***
 1. Host the database on a backend platform instead of using memory such as PG-lite.
@@ -184,7 +190,7 @@ A mock-up e-commerce site that sells 2nd hand board game with a backend (***Expr
     
     * With this setup, the following can be performed with typical PostgreSQL syntax
         - IMPORTANT: always remember to close the db
-        ```
+        ```js
         const ret = await db.query(`SELECT * FROM items WHERE id = $1`, [userId])
         console.log(ret.rows) // The result is stored in the rows array
         await db.close()
